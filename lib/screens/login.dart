@@ -40,7 +40,12 @@ class _PantallaLoginState extends State<PantallaLogin> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.movie_filter_rounded, size: 80, color: Colors.tealAccent),
+                  Image.asset(
+                    'assets/logo_movierent.png', 
+                    height: 120,
+                    color: Colors.tealAccent,
+                    colorBlendMode: BlendMode.srcIn,
+                  ),
                   const SizedBox(height: 20),
                   const Text(
                     'Entrar al Catálogo', 

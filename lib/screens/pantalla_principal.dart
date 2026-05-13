@@ -85,13 +85,21 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         peliculasFavoritas.remove(id);
         // muestro un snackbar si lo quito
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Eliminado de favoritos'), duration: Duration(seconds: 1)),
+          const SnackBar(
+            content: Text('Eliminado de favoritos'), 
+            duration: Duration(seconds: 1),
+            backgroundColor: Colors.greenAccent,
+          ),
         );
       } else {
         peliculasFavoritas.add(id);
         // muestro un snackbar si lo meto
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Añadido a favoritos'), duration: Duration(seconds: 1)),
+          const SnackBar(
+            content: Text('Añadido a favoritos'), 
+            duration: Duration(seconds: 1),
+            backgroundColor: Colors.greenAccent,
+          ),
         );
       }
     });
@@ -106,9 +114,16 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.movie_filter, size: 60, color: Colors.greenAccent),
+            Image.asset(
+              'assets/logo_movierent.png', 
+              height: 100,
+              color: Colors.greenAccent,
+              colorBlendMode: BlendMode.srcIn,
+            ),
             const SizedBox(height: 10),
-            Text(tr('menu_principal'), style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 18)),
+            const Text('MovieRent', style: TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 24, letterSpacing: 2)),
+            const SizedBox(height: 5),
+            Text(tr('menu_principal'), style: const TextStyle(color: Colors.white54, fontSize: 14)),
             const SizedBox(height: 40),
             ListTile(
               leading: const Icon(Icons.home, color: Colors.white),
@@ -198,29 +213,48 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
 
           return Stack(
             children: [
+              // Logotipo de fondo decorativo
+              Positioned(
+                right: -100,
+                bottom: -50,
+                child: Opacity(
+                  opacity: 0.05,
+                  child: Transform.rotate(
+                    angle: -0.2,
+                    child: Image.asset(
+                      'assets/logo_movierent.png',
+                      width: 600,
+                      color: Colors.greenAccent,
+                      colorBlendMode: BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ),
               peliculasAmostrar.isEmpty
                   ? Center(child: Text(viendoFavoritos ? tr('sin_favoritos') : tr('sin_peliculas'), style: const TextStyle(color: Colors.greenAccent, fontSize: 18)))
-                  : GridView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 130.0, bottom: 40.0), 
-                      clipBehavior: Clip.none, 
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 240, 
-                        childAspectRatio: 0.65,
-                        crossAxisSpacing: 35, 
-                        mainAxisSpacing: 35,  
-                      ),
-                      itemCount: peliculasAmostrar.length,
-                      itemBuilder: (context, index) {
-                        final peli = peliculasAmostrar[index];
-                        return TarjetaPelicula(
-                          pelicula: peli,
-                          esFavorito: peliculasFavoritas.contains(peli.id),
-                          cartKey: cartKey,
-                          onToggleFavorito: () => toggleFavorito(peli.id),
-                        );
-                      },
-                    ),
+                  : (!viendoFavoritos && !estaBuscando) 
+                      ? _buildGenreSliders(peliculasAmostrar)
+                      : GridView.builder(
+                          controller: _scrollController,
+                          padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 130.0, bottom: 40.0), 
+                          clipBehavior: Clip.none, 
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 240, 
+                            childAspectRatio: 0.65,
+                            crossAxisSpacing: 35, 
+                            mainAxisSpacing: 35,  
+                          ),
+                          itemCount: peliculasAmostrar.length,
+                          itemBuilder: (context, index) {
+                            final peli = peliculasAmostrar[index];
+                            return TarjetaPelicula(
+                              pelicula: peli,
+                              esFavorito: peliculasFavoritas.contains(peli.id),
+                              cartKey: cartKey,
+                              onToggleFavorito: () => toggleFavorito(peli.id),
+                            );
+                          },
+                        ),
           Positioned(
             top: 0, left: 0, right: 0,
             child: FloatingAppBar(
@@ -347,6 +381,88 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       );
         },
       ),
+    );
+  }
+  Widget _buildGenreSliders(List<Pelicula> peliculas) {
+    // Agrupamos por género
+    Map<String, List<Pelicula>> porGenero = {};
+    for (var p in peliculas) {
+      if (!porGenero.containsKey(p.genero)) {
+        porGenero[p.genero] = [];
+      }
+      porGenero[p.genero]!.add(p);
+    }
+
+    List<String> generos = porGenero.keys.toList()..sort();
+
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.only(top: 130.0, bottom: 40.0),
+      clipBehavior: Clip.none, // Evita que las filas corten el hover de las tarjetas
+      itemCount: generos.length,
+      itemBuilder: (context, index) {
+        final genero = generos[index];
+        final pelisDelGenero = porGenero[genero]!;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: Colors.greenAccent,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    genero.toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '(${pelisDelGenero.length})',
+                    style: const TextStyle(color: Colors.greenAccent, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 400,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                clipBehavior: Clip.none, // Evita que se corten las tarjetas al hacer hover
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                itemCount: pelisDelGenero.length,
+                itemBuilder: (context, pIndex) {
+                  final peli = pelisDelGenero[pIndex];
+                  return Container(
+                    width: 220,
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: TarjetaPelicula(
+                      pelicula: peli,
+                      esFavorito: peliculasFavoritas.contains(peli.id),
+                      cartKey: cartKey,
+                      onToggleFavorito: () => toggleFavorito(peli.id),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
+        );
+      },
     );
   }
 }

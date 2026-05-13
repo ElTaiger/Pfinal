@@ -9,6 +9,8 @@ class Pelicula {
   final String valoracion;
   final String reparto;
 
+  final String genero;
+
   Pelicula({
     required this.id,
     required this.titulo,
@@ -19,6 +21,7 @@ class Pelicula {
     required this.duracion,
     required this.valoracion,
     required this.reparto,
+    required this.genero,
   });
 
   factory Pelicula.fromJson(Map<String, dynamic> json, {String langCode = 'es'}) {
@@ -41,6 +44,7 @@ class Pelicula {
       reparto: json['reparto'] is List 
           ? (json['reparto'] as List).join(', ') 
           : (json['reparto']?.toString() ?? 'Desconocido'),
+      genero: json['genero'] ?? 'General',
     );
   }
 }

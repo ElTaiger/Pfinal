@@ -132,7 +132,7 @@ class _PantallaPerfilState extends State<PantallaPerfil> {
               ),
               child: Column(
                 children: [
-                  const Center(
+                  Center(
                     // aqui pongo la imagen cargada desde la red para cumplir el requisito
                     child: CircleAvatar(
                       radius: 60,
