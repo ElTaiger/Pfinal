@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/app_state.dart';
+import '../utils/idiomas.dart';
 import 'pantalla_principal.dart';
 
 // pantalla de inicio de sesion con un diseno minimalista y centrado
@@ -117,8 +118,8 @@ class _PantallaLoginState extends State<PantallaLogin> {
                           AppState().currentUser = UserProfile(
                             email: _usuario,
                             password: _password,
-                            nombre: 'Usuario de Prueba',
-                            biografia: 'Amante del cine de ciencia ficción y los clásicos de culto.',
+                            nombre: tr('nombre_usuario'),
+                            biografia: tr('bio_usuario'),
                             avatarUrl: 'https://picsum.photos/seed/${DateTime.now().millisecondsSinceEpoch}/200',
                           );
 

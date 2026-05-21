@@ -171,8 +171,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                     },
                     items: const [
                       DropdownMenuItem(value: Idioma.es, child: Text('🇪🇸 ES')),
-                      DropdownMenuItem(value: Idioma.en, child: Text('🇬🇧 EN')),
+                      DropdownMenuItem(value: Idioma.en, child: Text('🇺🇸 EN')),
                       DropdownMenuItem(value: Idioma.fr, child: Text('🇫🇷 FR')),
+                      DropdownMenuItem(value: Idioma.ko, child: Text('🇰🇷 KO')),
                     ],
                   ),
                 ],
@@ -421,7 +422,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    genero.toUpperCase(),
+                    trGenero(genero).toUpperCase(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,

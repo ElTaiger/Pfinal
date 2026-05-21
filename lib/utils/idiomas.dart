@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
 
-enum Idioma { es, en, fr }
+enum Idioma { es, en, fr, ko }
 
 final ValueNotifier<Idioma> idiomaActual = ValueNotifier(Idioma.es);
+
+// Formatea una fecha según el idioma activo:
+// ES: "24 de marzo de 1972"
+// EN: "March 24, 1972"
+// FR: "24 mars 1972"
+String formatearFecha(DateTime fecha) {
+  const mesesEs = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const mesesEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const mesesFr = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+
+  final mes = fecha.month - 1;
+  switch (idiomaActual.value) {
+    case Idioma.es:
+      return '${fecha.day} de ${mesesEs[mes]} de ${fecha.year}';
+    case Idioma.en:
+      return '${mesesEn[mes]} ${fecha.day}, ${fecha.year}';
+    case Idioma.fr:
+      return '${fecha.day} ${mesesFr[mes]} ${fecha.year}';
+    case Idioma.ko:
+      return '${fecha.year}년 ${fecha.month}월 ${fecha.day}일';
+  }
+}
 
 const Map<Idioma, Map<String, String>> traducciones = {
   Idioma.es: {
@@ -41,6 +63,16 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'campo_requerido': 'Campo requerido',
     'datos_cuenta': 'Datos de Cuenta',
     'historial_pedidos': 'Historial de Pedidos',
+    'fecha_estreno': 'Fecha de estreno',
+    'tu_valoracion': 'Tu valoración',
+    'sin_valorar': 'Sin valorar aún',
+    'filtrar_por_fecha': 'Filtrar por fecha',
+    'todas_las_fechas': 'Todas las fechas',
+    'sin_pedidos_fecha': 'No hay pedidos en esta fecha',
+    'nombre_usuario': 'Usuario de Prueba',
+    'bio_usuario': 'Amante del cine de ciencia ficción y los clásicos de culto.',
+    'pedido': 'Pedido',
+    'articulos': 'artículos',
   },
   Idioma.en: {
     'menu_principal': 'Main Menu',
@@ -78,6 +110,16 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'campo_requerido': 'Required field',
     'datos_cuenta': 'Account Details',
     'historial_pedidos': 'Order History',
+    'fecha_estreno': 'Release Date',
+    'tu_valoracion': 'Your Rating',
+    'sin_valorar': 'Not rated yet',
+    'filtrar_por_fecha': 'Filter by date',
+    'todas_las_fechas': 'All dates',
+    'sin_pedidos_fecha': 'No orders on this date',
+    'nombre_usuario': 'Test User',
+    'bio_usuario': 'Lover of science fiction cinema and cult classics.',
+    'pedido': 'Order',
+    'articulos': 'items',
   },
   Idioma.fr: {
     'menu_principal': 'Menu Principal',
@@ -115,9 +157,85 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'campo_requerido': 'Champ requis',
     'datos_cuenta': 'Détails du Compte',
     'historial_pedidos': 'Historique des Commandes',
+    'fecha_estreno': 'Date de sortie',
+    'tu_valoracion': 'Votre évaluation',
+    'sin_valorar': 'Pas encore évalué',
+    'filtrar_por_fecha': 'Filtrer par date',
+    'todas_las_fechas': 'Toutes les dates',
+    'sin_pedidos_fecha': 'Aucune commande à cette date',
+    'nombre_usuario': 'Utilisateur Test',
+    'bio_usuario': 'Amateur de cinéma de science-fiction et de classiques cultes.',
+    'pedido': 'Commande',
+    'articulos': 'articles',
+  },
+  Idioma.ko: {
+    'menu_principal': '메인 메뉴',
+    'catalogo_completo': '전체 카탈로그',
+    'mis_favoritos': '즐겨찾기',
+    'cerrar_sesion': '로그아웃',
+    'buscar': '검색...',
+    'favoritos': '즐겨찾기',
+    'catalogo': '카탈로그',
+    'sin_favoritos': '즐겨찾기가 없습니다',
+    'sin_peliculas': '영화를 찾을 수 없습니다',
+    'director': '감독',
+    'anio': '개봉 연도',
+    'valoracion': '평점',
+    'duracion': '상영 시간',
+    'reparto': '출연진',
+    'sinopsis': '상세 시놉시스',
+    'idioma': '언어',
+    'espanol': '스페인어',
+    'ingles': '영어',
+    'frances': '프랑스어',
+    'mi_carrito': '장바구니',
+    'anadir_carrito': '장바구니에 추가',
+    'anadir_seleccionadas': '선택 항목 추가',
+    'confirmar_compra': '구매 확인',
+    'direccion_envio': '배송 주소',
+    'telefono': '전화번호',
+    'cancelar': '취소',
+    'confirmar_pedido': '주문 확인',
+    'carrito_vacio': '장바구니가 비어 있습니다',
+    'anadir_mas': '더 추가',
+    'comprar_ahora': '지금 구매',
+    'anadir_peliculas': '영화 추가',
+    'mi_perfil': '내 프로필',
+    'campo_requerido': '필수 항목',
+    'datos_cuenta': '계정 정보',
+    'historial_pedidos': '주문 내역',
+    'fecha_estreno': '개봉일',
+    'tu_valoracion': '내 평점',
+    'sin_valorar': '아직 평가하지 않음',
+    'filtrar_por_fecha': '날짜로 필터',
+    'todas_las_fechas': '모든 날짜',
+    'sin_pedidos_fecha': '이 날짜에 주문이 없습니다',
+    'nombre_usuario': '테스트 사용자',
+    'bio_usuario': '공상과학 영화와 컬트 클래식을 사랑하는 영화 팬.',
+    'pedido': '주문',
+    'articulos': '항목',
   }
 };
 
 String tr(String key) {
   return traducciones[idiomaActual.value]?[key] ?? key;
+}
+
+// Géneros siempre vienen en español desde el JSON; esta función los traduce al idioma activo
+const Map<String, Map<Idioma, String>> _generos = {
+  'Acción':         {Idioma.es: 'Acción',         Idioma.en: 'Action',        Idioma.fr: 'Action',       Idioma.ko: '액션'},
+  'Animación':      {Idioma.es: 'Animación',       Idioma.en: 'Animation',     Idioma.fr: 'Animation',    Idioma.ko: '애니메이션'},
+  'Bélico':         {Idioma.es: 'Bélico',          Idioma.en: 'War',           Idioma.fr: 'Guerre',       Idioma.ko: '전쟁'},
+  'Biográfico':     {Idioma.es: 'Biográfico',      Idioma.en: 'Biographical',  Idioma.fr: 'Biographique', Idioma.ko: '전기'},
+  'Ciencia Ficción':{Idioma.es: 'Ciencia Ficción', Idioma.en: 'Sci-Fi',        Idioma.fr: 'Science-Fiction', Idioma.ko: 'SF'},
+  'Comedia':        {Idioma.es: 'Comedia',          Idioma.en: 'Comedy',        Idioma.fr: 'Comédie',      Idioma.ko: '코미디'},
+  'Crimen':         {Idioma.es: 'Crimen',           Idioma.en: 'Crime',         Idioma.fr: 'Crime',        Idioma.ko: '범죄'},
+  'Drama':          {Idioma.es: 'Drama',            Idioma.en: 'Drama',         Idioma.fr: 'Drame',        Idioma.ko: '드라마'},
+  'Fantasía':       {Idioma.es: 'Fantasía',         Idioma.en: 'Fantasy',       Idioma.fr: 'Fantaisie',    Idioma.ko: '판타지'},
+  'Suspenso':       {Idioma.es: 'Suspenso',         Idioma.en: 'Thriller',      Idioma.fr: 'Thriller',     Idioma.ko: '스릴러'},
+  'Terror':         {Idioma.es: 'Terror',           Idioma.en: 'Horror',        Idioma.fr: 'Horreur',      Idioma.ko: '공포'},
+};
+
+String trGenero(String generoEs) {
+  return _generos[generoEs]?[idiomaActual.value] ?? generoEs;
 }

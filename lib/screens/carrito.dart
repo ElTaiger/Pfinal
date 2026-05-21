@@ -188,7 +188,10 @@ class _PantallaCarritoState extends State<PantallaCarrito> {
                 if (mounted) {
                   Navigator.pop(context); // Cierra el dialog de animacion
                   setState(() {
-                    AppState().pedidosRealizados.add(List.from(AppState().carrito));
+                    AppState().pedidosRealizados.add(Pedido(
+                      peliculas: List.from(AppState().carrito),
+                      fecha: DateTime.now(),
+                    ));
                     AppState().carrito.clear();
                   });
                 }

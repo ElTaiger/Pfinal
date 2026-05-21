@@ -8,8 +8,8 @@ class Pelicula {
   final String duracion;
   final String valoracion;
   final String reparto;
-
   final String genero;
+  final DateTime? fechaEstreno;
 
   Pelicula({
     required this.id,
@@ -22,6 +22,7 @@ class Pelicula {
     required this.valoracion,
     required this.reparto,
     required this.genero,
+    this.fechaEstreno,
   });
 
   factory Pelicula.fromJson(Map<String, dynamic> json, {String langCode = 'es'}) {
@@ -30,6 +31,11 @@ class Pelicula {
         return field[langCode] ?? field['es'] ?? '';
       }
       return field?.toString() ?? '';
+    }
+
+    DateTime? fecha;
+    if (json['fechaEstreno'] != null) {
+      fecha = DateTime.tryParse(json['fechaEstreno'].toString());
     }
 
     return Pelicula(
@@ -41,10 +47,11 @@ class Pelicula {
       anio: json['anio']?.toString() ?? '',
       duracion: json['duracion'] ?? 'Desconocida',
       valoracion: json['valoracion'] ?? 'N/A',
-      reparto: json['reparto'] is List 
-          ? (json['reparto'] as List).join(', ') 
+      reparto: json['reparto'] is List
+          ? (json['reparto'] as List).join(', ')
           : (json['reparto']?.toString() ?? 'Desconocido'),
       genero: json['genero'] ?? 'General',
+      fechaEstreno: fecha,
     );
   }
 }

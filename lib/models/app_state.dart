@@ -8,12 +8,19 @@ class UserProfile {
   String avatarUrl;
 
   UserProfile({
-    required this.email, 
-    required this.password, 
-    required this.nombre, 
+    required this.email,
+    required this.password,
+    required this.nombre,
     required this.biografia,
     required this.avatarUrl,
   });
+}
+
+class Pedido {
+  final List<Pelicula> peliculas;
+  final DateTime fecha;
+
+  Pedido({required this.peliculas, required this.fecha});
 }
 
 class AppState {
@@ -23,5 +30,6 @@ class AppState {
 
   UserProfile? currentUser;
   List<Pelicula> carrito = [];
-  List<List<Pelicula>> pedidosRealizados = [];
+  List<Pedido> pedidosRealizados = [];
+  Map<String, double> valoracionesUsuario = {};
 }

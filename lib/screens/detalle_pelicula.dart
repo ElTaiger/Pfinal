@@ -28,11 +28,13 @@ class _DetallePeliculaState extends State<DetallePelicula> {
   late bool esFavorito;
   final GlobalKey cartKey = GlobalKey();
   bool _mostrarInfo = false;
+  double _valoracionUsuario = 0;
 
   @override
   void initState() {
     super.initState();
     esFavorito = widget.esFavoritoInicial;
+    _valoracionUsuario = AppState().valoracionesUsuario[widget.pelicula.id] ?? 0;
     idiomaActual.addListener(_actualizarIdioma);
     Future.delayed(const Duration(milliseconds: 1200), () {
       if (mounted) setState(() => _mostrarInfo = true);
@@ -212,11 +214,20 @@ class _DetallePeliculaState extends State<DetallePelicula> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _crearFilaDato(Icons.movie, tr('director'), widget.pelicula.director),
-                  _crearFilaDato(Icons.calendar_today, tr('anio'), widget.pelicula.anio),
+                  _crearFilaDato(
+                    Icons.calendar_today,
+                    tr('fecha_estreno'),
+                    widget.pelicula.fechaEstreno != null
+                        ? formatearFecha(widget.pelicula.fechaEstreno!)
+                        : widget.pelicula.anio,
+                  ),
                   _crearFilaDato(Icons.star, tr('valoracion'), widget.pelicula.valoracion),
                   _crearFilaDato(Icons.timer, tr('duracion'), widget.pelicula.duracion),
                   _crearFilaDato(Icons.people, tr('reparto'), widget.pelicula.reparto),
-                  
+
+                  const SizedBox(height: 30),
+                  _buildUserRating(),
+
                   const SizedBox(height: 30),
                   Text(tr('sinopsis'), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 15),
@@ -313,6 +324,59 @@ class _DetallePeliculaState extends State<DetallePelicula> {
       },
     );
 }
+
+  Widget _buildUserRating() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(tr('tu_valoracion'), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            ...List.generate(10, (index) {
+              final estrella = index + 1;
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (_valoracionUsuario == estrella.toDouble()) {
+                      // toca la misma estrella → elimina la valoración
+                      _valoracionUsuario = 0;
+                      AppState().valoracionesUsuario.remove(widget.pelicula.id);
+                    } else {
+                      _valoracionUsuario = estrella.toDouble();
+                      AppState().valoracionesUsuario[widget.pelicula.id] = _valoracionUsuario;
+                    }
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+                    child: Icon(
+                      estrella <= _valoracionUsuario ? Icons.star : Icons.star_border,
+                      key: ValueKey('star_${widget.pelicula.id}_${estrella}_${estrella <= _valoracionUsuario}'),
+                      color: estrella <= _valoracionUsuario ? Colors.amber : Colors.white38,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              );
+            }),
+            const SizedBox(width: 12),
+            Text(
+              _valoracionUsuario > 0 ? '${_valoracionUsuario.toInt()} / 10' : tr('sin_valorar'),
+              style: TextStyle(
+                color: _valoracionUsuario > 0 ? Colors.amber : Colors.white38,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   Widget _crearFilaDato(IconData icono, String titulo, String valor) {
     return Padding(
