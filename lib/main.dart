@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'Screens/login.dart';
+import 'screens/login.dart';
 
 void main() {
   runApp(const CatalogoPeliculasApp());
