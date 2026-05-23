@@ -616,6 +616,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
           Clip.none, // Evita que las filas corten el hover de las tarjetas
       itemCount: generos.length,
       itemBuilder: (context, index) {
+        final horizontalController = ScrollController();
         final genero = generos[index];
         final pelisDelGenero = porGenero[genero]!;
 
@@ -660,25 +661,64 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             ),
             SizedBox(
               height: 400,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                clipBehavior: Clip
-                    .none, // Evita que se corten las tarjetas al hacer hover
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                itemCount: pelisDelGenero.length,
-                itemBuilder: (context, pIndex) {
-                  final peli = pelisDelGenero[pIndex];
-                  return Container(
-                    width: 220,
-                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: TarjetaPelicula(
-                      pelicula: peli,
-                      esFavorito: peliculasFavoritas.contains(peli.id),
-                      cartKey: cartKey,
-                      onToggleFavorito: () => toggleFavorito(peli.id),
+              child: Stack(
+                children: [
+                  ListView.builder(
+                    controller: horizontalController,
+                  scrollDirection: Axis.horizontal,
+                  clipBehavior: Clip
+                      .none, // Evita que se corten las tarjetas al hacer hover
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  itemCount: pelisDelGenero.length,
+                  itemBuilder: (context, pIndex) {
+                    final peli = pelisDelGenero[pIndex];
+                    return Container(
+                      width: 220,
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: TarjetaPelicula(
+                        pelicula: peli,
+                        esFavorito: peliculasFavoritas.contains(peli.id),
+                        cartKey: cartKey,
+                        onToggleFavorito: () => toggleFavorito(peli.id),
+                      ),
+                    );
+                  },
+                ),
+                if(pelisDelGenero.length > 5)
+                  Positioned(
+                    left: 0,
+                    top: 170,
+                    child: IconButton(onPressed: () {
+                      horizontalController.animateTo(
+                        horizontalController.offset - 300 , 
+                        duration: Duration(milliseconds: 300), 
+                        curve: Curves.easeInOut,
+                        );
+                    }, 
+                    icon: Icon(
+                      Icons.keyboard_arrow_left_rounded,
+                      size: 40,
+                    )
+                    )
                     ),
-                  );
-                },
+                if(pelisDelGenero.length > 5)
+                  Positioned(
+                  right: 0,
+                  top: 170,
+                  child: IconButton(onPressed: () {
+                    horizontalController.animateTo(
+                     horizontalController.offset + 300 , 
+                      duration: Duration(milliseconds: 300), 
+                      curve: Curves.easeInOut,
+                      );
+                  }, 
+                  icon: Icon(
+                    Icons.keyboard_arrow_right_rounded,
+                    size: 40,
+                  )
+                  )
+                  ),
+                ]
               ),
             ),
             const SizedBox(height: 10),
