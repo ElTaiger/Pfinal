@@ -18,12 +18,15 @@ class _PantallaCarritoState extends State<PantallaCarrito> {
   final _formKey = GlobalKey<FormState>();
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false;
+  List<dynamic>? _jsonData;
+  Map<String, Pelicula> _peliculasTraducidas = {};
 
   @override
   void initState() {
     super.initState();
     idiomaActual.addListener(_actualizarIdioma);
     _scrollController.addListener(_onScroll);
+    _cargarTraducciones();
   }
 
   void _onScroll() {
@@ -35,7 +38,24 @@ class _PantallaCarritoState extends State<PantallaCarrito> {
   }
 
   void _actualizarIdioma() {
-    if (mounted) setState(() {});
+    _cargarTraducciones();
+  }
+
+  Future<void> _cargarTraducciones() async {
+    final String respuesta = await rootBundle.loadString('Data/peliculas.json');
+    _jsonData = json.decode(respuesta) as List;
+    final langCode = idiomaActual.value.name;
+    final todas = _jsonData!.map((j) => Pelicula.fromJson(j, langCode: langCode)).toList();
+    if (mounted) {
+      setState(() {
+        _peliculasTraducidas = {for (var p in todas) p.id: p};
+      });
+    }
+  }
+
+  /// Devuelve la versión traducida de una película del carrito
+  Pelicula _traducida(Pelicula p) {
+    return _peliculasTraducidas[p.id] ?? p;
   }
 
   @override
@@ -46,9 +66,11 @@ class _PantallaCarritoState extends State<PantallaCarrito> {
   }
 
   void _mostrarDialogoAnadir(BuildContext context) async {
-    final String respuesta = await rootBundle.loadString('Data/peliculas.json');
-    final List<dynamic> data = json.decode(respuesta);
-    final todas = data.map((j) => Pelicula.fromJson(j, langCode: idiomaActual.value.name)).toList();
+    if (_jsonData == null) {
+      final String respuesta = await rootBundle.loadString('Data/peliculas.json');
+      _jsonData = json.decode(respuesta) as List;
+    }
+    final todas = _jsonData!.map((j) => Pelicula.fromJson(j, langCode: idiomaActual.value.name)).toList();
     final disponibles = todas.where((p) => !AppState().carrito.any((c) => c.id == p.id)).toList();
     final Set<String> seleccionadas = {};
 
@@ -284,15 +306,16 @@ class _PantallaCarritoState extends State<PantallaCarrito> {
                   itemCount: carrito.length,
                   itemBuilder: (ctx, i) {
                     final p = carrito[i];
+                    final pTrad = _traducida(p);
                     return AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       child: Card(
                         color: Colors.white10,
                         margin: const EdgeInsets.only(bottom: 12),
                         child: ListTile(
-                          leading: Image.asset(p.urlImagen, width: 50, fit: BoxFit.cover),
-                          title: Text(p.titulo, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-                          subtitle: Text(p.director, style: const TextStyle(color: Colors.white70)),
+                          leading: Image.asset(pTrad.urlImagen, width: 50, fit: BoxFit.cover),
+                          title: Text(pTrad.titulo, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                          subtitle: Text(pTrad.director, style: const TextStyle(color: Colors.white70)),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete, color: Colors.redAccent),
                             onPressed: () {
