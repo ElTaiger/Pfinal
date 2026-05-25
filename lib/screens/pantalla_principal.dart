@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/pelicula.dart';
@@ -19,7 +18,6 @@ class PantallaPrincipal extends StatefulWidget {
 }
 
 class _PantallaPrincipalState extends State<PantallaPrincipal> {
-  // primero de todo, voy a declarar las variables que necesito
   List<Pelicula> todasLasPeliculas = [];
   List<dynamic>? _jsonData;
   bool estaBuscando = false;
@@ -32,16 +30,14 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false;
 
-  // aqui meto un future para cargar el json de peliculas sin que se trabe la app
+  // aquí meto un future para cargar el json de peliculas sin que se trabe la app
   late Future<List<Pelicula>> _peliculasFuture;
 
   @override
   void initState() {
     super.initState();
-    // cargo el json nada mas empezar
     _peliculasFuture = cargarPeliculas();
 
-    // Retrasamos el efecto para que el cristal aparezca de forma natural al bajar un poco mas
     _scrollController.addListener(() {
       if (_scrollController.offset > 80 && !_isScrolled) {
         setState(() => _isScrolled = true);
@@ -56,9 +52,10 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   void _actualizarIdioma() {
     if (mounted) {
       setState(() {
-        // recargo las pelis si el idioma cambia
+        // aquí recargo las pelis si el idioma cambia
         _peliculasFuture = cargarPeliculas();
       });
+      AppState().actualizarCarritoIdioma();
     }
   }
 
@@ -71,11 +68,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
 
   Future<List<Pelicula>> cargarPeliculas() async {
-    // pillo el json y lo decodifico
     final String respuesta = await rootBundle.loadString('Data/peliculas.json');
     _jsonData = await json.decode(respuesta) as List;
     final langCode = idiomaActual.value.name;
-    // devuelvo la lista ya parseada
     return _jsonData!
         .map((json) => Pelicula.fromJson(json, langCode: langCode))
         .toList();
@@ -85,7 +80,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     setState(() {
       if (peliculasFavoritas.contains(id)) {
         peliculasFavoritas.remove(id);
-        // muestro un snackbar si lo quito
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(tr('eliminado_favoritos')),
@@ -95,7 +89,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         );
       } else {
         peliculasFavoritas.add(id);
-        // muestro un snackbar si lo meto
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(tr('añadido_favoritos')),
@@ -232,7 +225,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         future: _peliculasFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // si esta cargando muestro la ruedita
             return const Center(
               child: CircularProgressIndicator(color: Colors.greenAccent),
             );
@@ -249,7 +241,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
           List<Pelicula> peliculasAmostrar = todasLasPeliculas;
 
           if (viendoFavoritos) {
-            // aqui filtro si le han dado a favoritos
             peliculasAmostrar = peliculasAmostrar
                 .where((p) => peliculasFavoritas.contains(p.id))
                 .toList();
@@ -325,7 +316,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                       },
                     ),
 
-              //Boton para añadir todas las peliculas favoritas al carrito
+              // aquí va el boton para añadir las favoritas al carrito
               if (viendoFavoritos && peliculasAmostrar.isNotEmpty)
                 Positioned(
                   bottom: 30,
@@ -336,8 +327,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
-                          int added =
-                              0; //Variable added, debido a errores con 'ñ'
+                          int added = 0;
                           for (var peli in peliculasAmostrar) {
                             if (!AppState().carrito.any(
                               (p) => p.id == peli.id,
@@ -540,7 +530,10 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                                   milliseconds: 400,
                                 ),
                               ),
-                            );
+                            ).then((_) {
+                              // aquí refresco los checks al volver del carrito
+                              if (mounted) setState(() {});
+                            });
                           },
                         ),
                       ),
@@ -598,7 +591,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
 
   Widget _buildGenreSliders(List<Pelicula> peliculas) {
-    // Agrupamos por género
+    // aquí agrupo por genero
     Map<String, List<Pelicula>> porGenero = {};
     for (var p in peliculas) {
       if (!porGenero.containsKey(p.genero)) {
@@ -612,8 +605,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     return ListView.builder(
       controller: _scrollController,
       padding: const EdgeInsets.only(top: 130.0, bottom: 40.0),
-      clipBehavior:
-          Clip.none, // Evita que las filas corten el hover de las tarjetas
+      clipBehavior: Clip.none,
       itemCount: generos.length,
       itemBuilder: (context, index) {
         final horizontalController = ScrollController();
@@ -665,60 +657,58 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                 children: [
                   ListView.builder(
                     controller: horizontalController,
-                  scrollDirection: Axis.horizontal,
-                  clipBehavior: Clip
-                      .none, // Evita que se corten las tarjetas al hacer hover
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  itemCount: pelisDelGenero.length,
-                  itemBuilder: (context, pIndex) {
-                    final peli = pelisDelGenero[pIndex];
-                    return Container(
-                      width: 220,
-                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: TarjetaPelicula(
-                        pelicula: peli,
-                        esFavorito: peliculasFavoritas.contains(peli.id),
-                        cartKey: cartKey,
-                        onToggleFavorito: () => toggleFavorito(peli.id),
-                      ),
-                    );
-                  },
-                ),
-                if(pelisDelGenero.length > 5)
-                  Positioned(
-                    left: 0,
-                    top: 170,
-                    child: IconButton(onPressed: () {
-                      horizontalController.animateTo(
-                        horizontalController.offset - 300 , 
-                        duration: Duration(milliseconds: 300), 
-                        curve: Curves.easeInOut,
-                        );
-                    }, 
-                    icon: Icon(
-                      Icons.keyboard_arrow_left_rounded,
-                      size: 40,
-                    )
-                    )
-                    ),
-                if(pelisDelGenero.length > 5)
-                  Positioned(
-                  right: 0,
-                  top: 170,
-                  child: IconButton(onPressed: () {
-                    horizontalController.animateTo(
-                     horizontalController.offset + 300 , 
-                      duration: Duration(milliseconds: 300), 
-                      curve: Curves.easeInOut,
+                    scrollDirection: Axis.horizontal,
+                    clipBehavior: Clip.none,
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                    itemCount: pelisDelGenero.length,
+                    itemBuilder: (context, pIndex) {
+                      final peli = pelisDelGenero[pIndex];
+                      return Container(
+                        width: 220,
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: TarjetaPelicula(
+                          pelicula: peli,
+                          esFavorito: peliculasFavoritas.contains(peli.id),
+                          cartKey: cartKey,
+                          onToggleFavorito: () => toggleFavorito(peli.id),
+                        ),
                       );
-                  }, 
-                  icon: Icon(
-                    Icons.keyboard_arrow_right_rounded,
-                    size: 40,
-                  )
-                  )
+                    },
                   ),
-                ]
+                  if (pelisDelGenero.length > 5)
+                    Positioned(
+                      left: 0,
+                      top: 170,
+                      child: IconButton(
+                        onPressed: () {
+                          horizontalController.animateTo(
+                            horizontalController.offset - 300,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        icon: Icon(Icons.keyboard_arrow_left_rounded, size: 40),
+                      ),
+                    ),
+                  if (pelisDelGenero.length > 5)
+                    Positioned(
+                      right: 0,
+                      top: 170,
+                      child: IconButton(
+                        onPressed: () {
+                          horizontalController.animateTo(
+                            horizontalController.offset + 300,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.keyboard_arrow_right_rounded,
+                          size: 40,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
             const SizedBox(height: 10),

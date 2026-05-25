@@ -3,7 +3,6 @@ import '../models/app_state.dart';
 import '../utils/idiomas.dart';
 import 'pantalla_principal.dart';
 
-// pantalla de inicio de sesion con un diseno minimalista y centrado
 class PantallaLogin extends StatefulWidget {
   const PantallaLogin({super.key});
 
@@ -22,7 +21,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            // limitamos el ancho a 400 para que no se estire en el navegador
+            // aquí limito el ancho para que no se estire demasiado
             constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(30.0),
             decoration: BoxDecoration(
@@ -42,14 +41,14 @@ class _PantallaLoginState extends State<PantallaLogin> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/logo_movierent.png', 
+                    'assets/logo_movierent.png',
                     height: 120,
                     color: Colors.tealAccent,
                     colorBlendMode: BlendMode.srcIn,
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'Entrar al Catálogo', 
+                    'Entrar al Catálogo',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
@@ -110,26 +109,34 @@ class _PantallaLoginState extends State<PantallaLogin> {
                         ),
                       ),
                       onPressed: () {
-                        // validamos y pasamos a la pantalla del grid
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          
-                          // Guardamos el usuario en el estado global
+
+                          // aquí guardo el usuario para usarlo luego en el perfil
                           AppState().currentUser = UserProfile(
                             email: _usuario,
                             password: _password,
                             nombre: tr('nombre_usuario'),
                             biografia: tr('bio_usuario'),
-                            avatarUrl: 'https://picsum.photos/seed/${DateTime.now().millisecondsSinceEpoch}/200',
+                            avatarUrl:
+                                'https://picsum.photos/seed/${DateTime.now().millisecondsSinceEpoch}/200',
                           );
 
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const PantallaPrincipal()),
+                            MaterialPageRoute(
+                              builder: (context) => const PantallaPrincipal(),
+                            ),
                           );
                         }
                       },
-                      child: const Text('ACCEDER', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      child: const Text(
+                        'ACCEDER',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ),
                 ],

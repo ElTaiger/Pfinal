@@ -41,20 +41,30 @@ class FloatingAppBar extends StatelessWidget implements PreferredSizeWidget {
                 borderRadius: BorderRadius.circular(35),
                 child: TweenAnimationBuilder<double>(
                   tween: Tween<double>(
-                    begin: isScrolled ? 15.0 : 0.0, 
+                    begin: isScrolled ? 15.0 : 0.0,
                     end: isScrolled ? 15.0 : 0.0,
                   ),
                   duration: const Duration(milliseconds: 350),
                   curve: Curves.easeInOut,
                   builder: (context, blurValue, child) {
                     return BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: blurValue, sigmaY: blurValue),
+                      filter: ImageFilter.blur(
+                        sigmaX: blurValue,
+                        sigmaY: blurValue,
+                      ),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 350),
                         decoration: BoxDecoration(
-                          color: isScrolled ? Colors.black.withOpacity(0.65) : Colors.transparent,
+                          color: isScrolled
+                              ? Colors.black.withOpacity(0.65)
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(35),
-                          border: Border.all(color: isScrolled ? Colors.white30 : Colors.transparent, width: 1),
+                          border: Border.all(
+                            color: isScrolled
+                                ? Colors.white30
+                                : Colors.transparent,
+                            width: 1,
+                          ),
                         ),
                       ),
                     );
@@ -92,32 +102,57 @@ class SequentialFadeHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: tag,
-      flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) {
-        return Material(
-          type: MaterialType.transparency,
-          child: AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) {
-              double progress = flightDirection == HeroFlightDirection.push ? animation.value : 1.0 - animation.value;
-              double outOpacity = 0.0;
-              double inOpacity = 0.0;
-              if (progress <= 0.5) {
-                outOpacity = 1.0 - (progress * 2.0);
-              } else {
-                inOpacity = (progress - 0.5) * 2.0;
-              }
-              return Stack(
-                alignment: Alignment.center,
-                clipBehavior: Clip.none,
-                children: [
-                  if (outOpacity > 0.0) Opacity(opacity: outOpacity, child: OverflowBox(maxWidth: double.infinity, maxHeight: double.infinity, child: fromHeroContext.widget)),
-                  if (inOpacity > 0.0) Opacity(opacity: inOpacity, child: OverflowBox(maxWidth: double.infinity, maxHeight: double.infinity, child: toHeroContext.widget)),
-                ],
-              );
-            },
-          ),
-        );
-      },
+      flightShuttleBuilder:
+          (
+            flightContext,
+            animation,
+            flightDirection,
+            fromHeroContext,
+            toHeroContext,
+          ) {
+            return Material(
+              type: MaterialType.transparency,
+              child: AnimatedBuilder(
+                animation: animation,
+                builder: (context, child) {
+                  double progress = flightDirection == HeroFlightDirection.push
+                      ? animation.value
+                      : 1.0 - animation.value;
+                  double outOpacity = 0.0;
+                  double inOpacity = 0.0;
+                  if (progress <= 0.5) {
+                    outOpacity = 1.0 - (progress * 2.0);
+                  } else {
+                    inOpacity = (progress - 0.5) * 2.0;
+                  }
+                  return Stack(
+                    alignment: Alignment.center,
+                    clipBehavior: Clip.none,
+                    children: [
+                      if (outOpacity > 0.0)
+                        Opacity(
+                          opacity: outOpacity,
+                          child: OverflowBox(
+                            maxWidth: double.infinity,
+                            maxHeight: double.infinity,
+                            child: fromHeroContext.widget,
+                          ),
+                        ),
+                      if (inOpacity > 0.0)
+                        Opacity(
+                          opacity: inOpacity,
+                          child: OverflowBox(
+                            maxWidth: double.infinity,
+                            maxHeight: double.infinity,
+                            child: toHeroContext.widget,
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
       child: Material(type: MaterialType.transparency, child: child),
     );
   }
