@@ -148,14 +148,14 @@ class _PantallaPerfilState extends State<PantallaPerfil> {
                   const SizedBox(height: 20),
                   Center(
                     child: Text(
-                      user?.nombre ?? 'Usuario',
+                      tr('nombre_usuario'),
                       style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 10),
                   Center(
                     child: Text(
-                      user?.biografia ?? '',
+                      tr('bio_usuario'),
                       style: const TextStyle(fontSize: 16, color: Colors.white70, fontStyle: FontStyle.italic),
                       textAlign: TextAlign.center,
                     ),
@@ -275,10 +275,10 @@ class _PantallaPerfilState extends State<PantallaPerfil> {
     final todos = AppState().pedidosRealizados;
 
     if (todos.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Text('Aún no has realizado ningún pedido.',
-            style: TextStyle(color: Colors.white70)),
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(tr('sin_pedidos'),
+            style: const TextStyle(color: Colors.white70)),
       );
     }
 

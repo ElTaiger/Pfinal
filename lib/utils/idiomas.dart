@@ -76,6 +76,7 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'bio_usuario': 'Amante del cine de ciencia ficción y los clásicos de culto.',
     'pedido': 'Pedido',
     'articulos': 'artículos',
+    'sin_pedidos': 'Aún no has realizado ningún pedido.',
   },
   Idioma.en: {
     'menu_principal': 'Main Menu',
@@ -126,6 +127,7 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'bio_usuario': 'Lover of science fiction cinema and cult classics.',
     'pedido': 'Order',
     'articulos': 'items',
+    'sin_pedidos': 'You haven\'t placed any orders yet.',
   },
   Idioma.fr: {
     'menu_principal': 'Menu Principal',
@@ -176,6 +178,7 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'bio_usuario': 'Amateur de cinéma de science-fiction et de classiques cultes.',
     'pedido': 'Commande',
     'articulos': 'articles',
+    'sin_pedidos': 'Vous n\'avez pas encore passé de commande.',
   },
   Idioma.ko: {
     'menu_principal': '메인 메뉴',
@@ -226,6 +229,7 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'bio_usuario': '공상과학 영화와 컬트 클래식을 사랑하는 영화 팬.',
     'pedido': '주문',
     'articulos': '항목',
+    'sin_pedidos': '아직 주문한 내역이 없습니다.',
   }
 };
 
