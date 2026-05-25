@@ -32,7 +32,7 @@ class CatalogoPeliculasApp extends StatelessWidget {
           elevation: 2,
         ),
       ),
-      // empezamos por la pantalla de login
+      // aquí empiezo por la pantalla de login
       home: const PantallaLogin(),
     );
   }

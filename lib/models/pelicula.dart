@@ -25,7 +25,10 @@ class Pelicula {
     this.fechaEstreno,
   });
 
-  factory Pelicula.fromJson(Map<String, dynamic> json, {String langCode = 'es'}) {
+  factory Pelicula.fromJson(
+    Map<String, dynamic> json, {
+    String langCode = 'es',
+  }) {
     String getLocalized(dynamic field) {
       if (field is Map) {
         return field[langCode] ?? field['es'] ?? '';

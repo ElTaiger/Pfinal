@@ -4,14 +4,50 @@ enum Idioma { es, en, fr, ko }
 
 final ValueNotifier<Idioma> idiomaActual = ValueNotifier(Idioma.es);
 
-// Formatea una fecha según el idioma activo:
-// ES: "24 de marzo de 1972"
-// EN: "March 24, 1972"
-// FR: "24 mars 1972"
+// aquí formateo la fecha segun el idioma que este puesto
 String formatearFecha(DateTime fecha) {
-  const mesesEs = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-  const mesesEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const mesesFr = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  const mesesEs = [
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
+  ];
+  const mesesEn = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const mesesFr = [
+    'janvier',
+    'février',
+    'mars',
+    'avril',
+    'mai',
+    'juin',
+    'juillet',
+    'août',
+    'septembre',
+    'octobre',
+    'novembre',
+    'décembre',
+  ];
 
   final mes = fecha.month - 1;
   switch (idiomaActual.value) {
@@ -66,6 +102,7 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'campo_requerido': 'Campo requerido',
     'datos_cuenta': 'Datos de Cuenta',
     'historial_pedidos': 'Historial de Pedidos',
+    'email': 'Correo',
     'fecha_estreno': 'Fecha de estreno',
     'tu_valoracion': 'Tu valoración',
     'sin_valorar': 'Sin valorar aún',
@@ -73,7 +110,8 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'todas_las_fechas': 'Todas las fechas',
     'sin_pedidos_fecha': 'No hay pedidos en esta fecha',
     'nombre_usuario': 'Usuario de Prueba',
-    'bio_usuario': 'Amante del cine de ciencia ficción y los clásicos de culto.',
+    'bio_usuario':
+        'Amante del cine de ciencia ficción y los clásicos de culto.',
     'pedido': 'Pedido',
     'articulos': 'artículos',
     'sin_pedidos': 'Aún no has realizado ningún pedido.',
@@ -117,6 +155,7 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'campo_requerido': 'Required field',
     'datos_cuenta': 'Account Details',
     'historial_pedidos': 'Order History',
+    'email': 'Email',
     'fecha_estreno': 'Release Date',
     'tu_valoracion': 'Your Rating',
     'sin_valorar': 'Not rated yet',
@@ -168,6 +207,7 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'campo_requerido': 'Champ requis',
     'datos_cuenta': 'Détails du Compte',
     'historial_pedidos': 'Historique des Commandes',
+    'email': 'E-mail',
     'fecha_estreno': 'Date de sortie',
     'tu_valoracion': 'Votre évaluation',
     'sin_valorar': 'Pas encore évalué',
@@ -175,7 +215,8 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'todas_las_fechas': 'Toutes les dates',
     'sin_pedidos_fecha': 'Aucune commande à cette date',
     'nombre_usuario': 'Utilisateur Test',
-    'bio_usuario': 'Amateur de cinéma de science-fiction et de classiques cultes.',
+    'bio_usuario':
+        'Amateur de cinéma de science-fiction et de classiques cultes.',
     'pedido': 'Commande',
     'articulos': 'articles',
     'sin_pedidos': 'Vous n\'avez pas encore passé de commande.',
@@ -219,6 +260,7 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'campo_requerido': '필수 항목',
     'datos_cuenta': '계정 정보',
     'historial_pedidos': '주문 내역',
+    'email': '이메일',
     'fecha_estreno': '개봉일',
     'tu_valoracion': '내 평점',
     'sin_valorar': '아직 평가하지 않음',
@@ -230,26 +272,81 @@ const Map<Idioma, Map<String, String>> traducciones = {
     'pedido': '주문',
     'articulos': '항목',
     'sin_pedidos': '아직 주문한 내역이 없습니다.',
-  }
+  },
 };
 
 String tr(String key) {
   return traducciones[idiomaActual.value]?[key] ?? key;
 }
 
-// Géneros siempre vienen en español desde el JSON; esta función los traduce al idioma activo
+// aquí traduzco los generos que vienen en español desde el json
 const Map<String, Map<Idioma, String>> _generos = {
-  'Acción':         {Idioma.es: 'Acción',         Idioma.en: 'Action',        Idioma.fr: 'Action',       Idioma.ko: '액션'},
-  'Animación':      {Idioma.es: 'Animación',       Idioma.en: 'Animation',     Idioma.fr: 'Animation',    Idioma.ko: '애니메이션'},
-  'Bélico':         {Idioma.es: 'Bélico',          Idioma.en: 'War',           Idioma.fr: 'Guerre',       Idioma.ko: '전쟁'},
-  'Biográfico':     {Idioma.es: 'Biográfico',      Idioma.en: 'Biographical',  Idioma.fr: 'Biographique', Idioma.ko: '전기'},
-  'Ciencia Ficción':{Idioma.es: 'Ciencia Ficción', Idioma.en: 'Sci-Fi',        Idioma.fr: 'Science-Fiction', Idioma.ko: 'SF'},
-  'Comedia':        {Idioma.es: 'Comedia',          Idioma.en: 'Comedy',        Idioma.fr: 'Comédie',      Idioma.ko: '코미디'},
-  'Crimen':         {Idioma.es: 'Crimen',           Idioma.en: 'Crime',         Idioma.fr: 'Crime',        Idioma.ko: '범죄'},
-  'Drama':          {Idioma.es: 'Drama',            Idioma.en: 'Drama',         Idioma.fr: 'Drame',        Idioma.ko: '드라마'},
-  'Fantasía':       {Idioma.es: 'Fantasía',         Idioma.en: 'Fantasy',       Idioma.fr: 'Fantaisie',    Idioma.ko: '판타지'},
-  'Suspenso':       {Idioma.es: 'Suspenso',         Idioma.en: 'Thriller',      Idioma.fr: 'Thriller',     Idioma.ko: '스릴러'},
-  'Terror':         {Idioma.es: 'Terror',           Idioma.en: 'Horror',        Idioma.fr: 'Horreur',      Idioma.ko: '공포'},
+  'Acción': {
+    Idioma.es: 'Acción',
+    Idioma.en: 'Action',
+    Idioma.fr: 'Action',
+    Idioma.ko: '액션',
+  },
+  'Animación': {
+    Idioma.es: 'Animación',
+    Idioma.en: 'Animation',
+    Idioma.fr: 'Animation',
+    Idioma.ko: '애니메이션',
+  },
+  'Bélico': {
+    Idioma.es: 'Bélico',
+    Idioma.en: 'War',
+    Idioma.fr: 'Guerre',
+    Idioma.ko: '전쟁',
+  },
+  'Biográfico': {
+    Idioma.es: 'Biográfico',
+    Idioma.en: 'Biographical',
+    Idioma.fr: 'Biographique',
+    Idioma.ko: '전기',
+  },
+  'Ciencia Ficción': {
+    Idioma.es: 'Ciencia Ficción',
+    Idioma.en: 'Sci-Fi',
+    Idioma.fr: 'Science-Fiction',
+    Idioma.ko: 'SF',
+  },
+  'Comedia': {
+    Idioma.es: 'Comedia',
+    Idioma.en: 'Comedy',
+    Idioma.fr: 'Comédie',
+    Idioma.ko: '코미디',
+  },
+  'Crimen': {
+    Idioma.es: 'Crimen',
+    Idioma.en: 'Crime',
+    Idioma.fr: 'Crime',
+    Idioma.ko: '범죄',
+  },
+  'Drama': {
+    Idioma.es: 'Drama',
+    Idioma.en: 'Drama',
+    Idioma.fr: 'Drame',
+    Idioma.ko: '드라마',
+  },
+  'Fantasía': {
+    Idioma.es: 'Fantasía',
+    Idioma.en: 'Fantasy',
+    Idioma.fr: 'Fantaisie',
+    Idioma.ko: '판타지',
+  },
+  'Suspenso': {
+    Idioma.es: 'Suspenso',
+    Idioma.en: 'Thriller',
+    Idioma.fr: 'Thriller',
+    Idioma.ko: '스릴러',
+  },
+  'Terror': {
+    Idioma.es: 'Terror',
+    Idioma.en: 'Horror',
+    Idioma.fr: 'Horreur',
+    Idioma.ko: '공포',
+  },
 };
 
 String trGenero(String generoEs) {

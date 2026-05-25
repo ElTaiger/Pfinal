@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
-void animarHaciaCarrito(BuildContext context, GlobalKey cartKey, BuildContext itemContext, String imageUrl) {
-  final RenderBox? cartBox = cartKey.currentContext?.findRenderObject() as RenderBox?;
+void animarHaciaCarrito(
+  BuildContext context,
+  GlobalKey cartKey,
+  BuildContext itemContext,
+  String imageUrl,
+) {
+  final RenderBox? cartBox =
+      cartKey.currentContext?.findRenderObject() as RenderBox?;
   final RenderBox? itemBox = itemContext.findRenderObject() as RenderBox?;
 
   if (cartBox == null || itemBox == null) return;
@@ -18,9 +24,12 @@ void animarHaciaCarrito(BuildContext context, GlobalKey cartKey, BuildContext it
         duration: const Duration(milliseconds: 700),
         curve: Curves.easeInOutCubic,
         builder: (context, value, child) {
-          final currentX = itemPosition.dx + (cartPosition.dx - itemPosition.dx) * value;
-          final currentY = itemPosition.dy + (cartPosition.dy - itemPosition.dy) * value;
-          final currentScale = 1.0 - (0.5 * value); // se hace un poco más pequeño
+          final currentX =
+              itemPosition.dx + (cartPosition.dx - itemPosition.dx) * value;
+          final currentY =
+              itemPosition.dy + (cartPosition.dy - itemPosition.dy) * value;
+          final currentScale =
+              1.0 - (0.5 * value); // aquí se va haciendo mas pequeño
           final currentOpacity = 1.0 - (0.5 * value);
 
           return Positioned(
@@ -32,7 +41,12 @@ void animarHaciaCarrito(BuildContext context, GlobalKey cartKey, BuildContext it
                 opacity: currentOpacity,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(imageUrl, width: 50, height: 75, fit: BoxFit.cover),
+                  child: Image.asset(
+                    imageUrl,
+                    width: 50,
+                    height: 75,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
